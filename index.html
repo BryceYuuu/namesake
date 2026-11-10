@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>名中注定 · 你的名字在 12 个国家怎么叫</title>
+  <meta name="description" content="输入中文名，一键生成英语、日语、韩语、法语、德语、西班牙语、意大利语、葡萄牙语、荷兰语、俄语、泰语、阿拉伯语名字，音近又义合，附发音与名字详解。" />
+  <meta property="og:title" content="名中注定 · 你的名字在 12 个国家怎么叫" />
+  <meta property="og:image" content="assets/logo-512.png" />
+  <meta name="application-name" content="名中注定" />
+  <meta property="og:description" content="输入中文名，生成音近又义合的 12 国名字，附发音、详解和分享卡片。" />
+  <meta name="theme-color" content="#f6f1e9" />
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="assets/favicon-64.png" sizes="64x64" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="./"><img class="logo-mark" src="assets/logo-512.png" alt="" width="34" height="34" /><span class="logo-text" data-i18n="brand">名中注定</span></a>
+      <div class="nav-right"><span class="nav-tag" data-i18n="navTag">12 国 · AI 起名</span><button id="langBtn" class="lang-btn" type="button" data-i18n="langBtn">EN</button></div>
+    </nav>
+
+    <header class="intro">
+      <p class="kicker" data-i18n="kicker">名中注定</p>
+      <h1 data-i18n-html="h1">你的名字，<br class="m" />在 <em>12</em> 个国家怎么叫</h1>
+      <p class="sub" data-i18n="sub"></p>
+
+      <form id="form" class="search" autocomplete="off">
+        <input id="name" maxlength="40" data-i18n-ph="ph" aria-label="name" />
+        <div class="gender" role="radiogroup" aria-label="性别">
+          <button type="button" data-g="m" role="radio" data-i18n="male">男</button>
+          <button type="button" data-g="f" role="radio" data-i18n="female">女</button>
+        </div>
+        <button class="go" type="submit" data-i18n="go">生成名片</button>
+      </form>
+      <p id="error" class="error" hidden></p>
+      <p id="quota" class="quota"></p>
+      <div class="flags" aria-hidden="true">🇨🇳 🇬🇧 🇯🇵 🇰🇷 🇫🇷 🇩🇪 🇪🇸 🇮🇹 🇵🇹 🇳🇱 🇷🇺 🇹🇭 🇦🇪</div>
+    </header>
+
+    <section id="result" hidden>
+      <div class="namecard">
+        <div class="nc-left">
+          <div class="nc-label" data-i18n="ncLabel">名中注定</div>
+          <div id="heroName" class="nc-name"></div>
+          <div id="heroPy" class="nc-py"></div>
+        </div>
+        <div class="nc-right">
+          <p id="comment" class="nc-comment"></p>
+          <div id="progress" class="nc-progress"></div>
+        </div>
+      </div>
+
+      <div id="cards" class="cards"></div>
+
+      <div class="actions">
+        <button id="shareBtn" class="btn primary" data-i18n="share">生成分享长图</button>
+        <button id="copyBtn" class="btn" data-i18n="copy">复制链接</button>
+        <button id="againBtn" class="btn ghost" data-i18n="again">换个名字</button>
+      </div>
+    </section>
+
+    <footer class="foot" data-i18n="footer"></footer>
+  </main>
+
+  <!-- 名字详解弹窗 -->
+  <div id="sheet" class="sheet-wrap" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetName">
+      <button class="sheet-close" data-close aria-label="关闭">✕</button>
+      <div id="sheetHero" class="sheet-hero"></div>
+      <div id="sheetBody" class="sheet-body"></div>
+      <div class="sheet-foot">
+        <button id="sheetShuffle" class="btn" data-i18n="sheetShuffle">↻ 换一个</button>
+        <button class="btn primary" data-close data-i18n="sheetKeep">就叫这个</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分享长图 -->
+  <div id="modal" class="sheet-wrap" hidden>
+    <div class="sheet share">
+      <button class="sheet-close" data-close aria-label="关闭">✕</button>
+      <img id="cardImg" alt="分享长图" />
+      <p class="tip" data-i18n="shareTip">手机上长按图片即可保存</p>
+      <div class="sheet-foot">
+        <a id="downloadBtn" class="btn primary" download="名中注定.png" data-i18n="download">下载图片</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 免费次数用完 -->
+  <div id="paywall" class="sheet-wrap" hidden>
+    <div class="sheet pay" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+      <button class="sheet-close" data-close aria-label="close">✕</button>
+      <img class="pay-logo" src="assets/logo-512.png" alt="" width="64" height="64" />
+      <h3 id="payTitle"></h3>
+      <p id="payText"></p>
+      <div class="sheet-foot">
+        <a id="payRepo" class="btn" target="_blank" rel="noopener" data-i18n="payRepo"></a>
+        <button class="btn primary" data-close data-i18n="payOk"></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="data/hanzi.js" defer></script>
+  <script src="data/names.js" defer></script>
+  <script src="js/engine.js" defer></script>
+  <script src="js/i18n.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
