@@ -137,7 +137,7 @@ const FOREIGN_NAME_RE = /^[\p{Script=Latin}][\p{Script=Latin}\p{M}' .-]{1,39}$/u
 // 模型偶尔会把普通单词当人名，命中即丢弃
 const NOT_NAMES = new Set(
   ("neige schnee schneewittchen schneeweiss schneeweiß blume edelweiss edelweiß fleur maggio mayo mai valiente morgen nieve " +
-   "sonne mond stern lune etoile étoile soleil primavera invierno inverno hiver winter sommer sneeuw bloem").split(" ")
+   "sonne mond stern lune etoile étoile soleil primavera invierno inverno hiver winter sommer sneeuw bloem vaillant valente valiant").split(" ")
 );
 // 韩语里含义不好或明显是普通名词的
 const KO_BAD = new Set("사기 위대 겨울 새벽 사망 지옥 바보 도둑 범죄 시체 사고 망신".split(" "));

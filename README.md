@@ -2,7 +2,7 @@
 
 <img src="assets/logo-512.png" width="96" alt="Namesake logo" />
 
-**👉 立即体验 / Try it：<!-- LIVE_URL -->（即将上线 / coming soon）**
+**👉 立即体验 / Try it：[namesake-beta.vercel.app](https://namesake-beta.vercel.app/)**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FBryceYuuu%2Fnamesake&project-name=namesake&env=LLM_API_KEY,LLM_BASE_URL,LLM_MODEL,LLM_EXTRA_BODY&envDescription=OpenAI-compatible%20LLM%20settings%2C%20see%20.env.example)
 
