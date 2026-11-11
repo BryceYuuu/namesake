@@ -74,10 +74,30 @@
   function showPaywall(kind) {
     $("payTitle").textContent = T("payTitle");
     $("payText").textContent = T(kind === "shuffle" ? "payShuffle" : "payGenerate");
+    $("payStarAsk").textContent = T("starAsk");
     $("payRepo").href = REPO_URL;
+    renderStarButton();
+    loadStars().then(renderStarButton);
     $("paywall").hidden = false;
     document.body.style.overflow = "hidden";
   }
+  // GitHub 当前 Star 数（公开接口，会话内缓存；拿不到就只显示按钮文字）
+  let stars = null;
+  try { stars = JSON.parse(sessionStorage.getItem("wn-stars") || "null"); } catch {}
+  async function loadStars() {
+    if (stars !== null) return;
+    try {
+      const res = await fetch(REPO_URL.replace("https://github.com/", "https://api.github.com/repos/"));
+      if (!res.ok) return;
+      stars = (await res.json()).stargazers_count;
+      if (typeof stars === "number") sessionStorage.setItem("wn-stars", JSON.stringify(stars));
+      else stars = null;
+    } catch {}
+  }
+  function renderStarButton() {
+    $("payRepo").innerHTML = esc(T("payRepo")) + (typeof stars === "number" && stars >= 10 ? `<span class="star-n">${stars}</span>` : "") // 少于 10 个不显示，避免反向社交证明;
+  }
+
   function closePaywall() {
     $("paywall").hidden = true;
     if ($("sheet").hidden && $("modal").hidden) document.body.style.overflow = "";

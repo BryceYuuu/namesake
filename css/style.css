@@ -95,7 +95,20 @@ br.m { display: none; }
 .sheet.pay .sheet-close { background: rgba(0,0,0,.06); color: var(--ink); }
 .pay-logo { width: 64px; height: 64px; border-radius: 16px; margin: 0 auto 14px; box-shadow: 0 6px 18px rgba(210, 66, 26, .22); }
 .sheet.pay h3 { margin: 0 0 8px; font: 800 22px var(--cn-serif); }
-.sheet.pay p { margin: 0 0 20px; color: var(--ink-2); font-size: 14.5px; line-height: 1.7; }
+.sheet.pay p { margin: 0 0 12px; color: var(--ink-2); font-size: 14.5px; line-height: 1.7; }
+.sheet.pay .star-ask {
+  margin: 0 0 20px; padding: 10px 14px; border-radius: 14px; font-size: 13.5px; color: #8a5a12;
+  background: linear-gradient(135deg, #fff4dc, #ffe9c7); border: 1px solid #f6d79c;
+}
+.sheet.pay .sheet-foot .btn { white-space: nowrap; }
+.sheet.pay .star-btn {
+  font-weight: 700; color: #5a3a06; border-color: #f0b44a;
+  background: linear-gradient(135deg, #ffd66b, #f5a01f); box-shadow: 0 6px 16px rgba(245, 160, 31, .3);
+}
+.sheet.pay .star-btn:hover { filter: brightness(1.04); color: #5a3a06; }
+.star-n {
+  margin-left: 6px; padding: 1px 8px; border-radius: 99px; font-size: 12px; background: rgba(255,255,255,.55); color: #5a3a06;
+}
 .sheet.pay .sheet-foot { margin: 0 -26px; flex-wrap: wrap; }
 .sheet.pay .sheet-foot .btn.primary { background: linear-gradient(135deg, var(--accent), #e8611f); border-color: var(--accent); }
 .flags { margin-top: 22px; font-size: 20px; letter-spacing: 6px; opacity: .85; }

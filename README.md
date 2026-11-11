@@ -4,6 +4,8 @@
 
 **👉 立即体验 / Try it：[namesake-beta.vercel.app](https://namesake-beta.vercel.app/)**
 
+<a href="https://namesake-beta.vercel.app/"><img src="docs/screenshots/home-zh.jpg" alt="名中注定 Namesake 首页" /></a>
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FBryceYuuu%2Fnamesake&project-name=namesake&env=LLM_API_KEY,LLM_BASE_URL,LLM_MODEL,LLM_EXTRA_BODY&envDescription=OpenAI-compatible%20LLM%20settings%2C%20see%20.env.example)
 
 **你的名字在 12 个国家怎么叫。** 输入中文名，生成英、日、韩、法、德、西、意、葡、荷、俄、泰、阿拉伯 12 种语言的名字；
@@ -14,6 +16,12 @@
 letters (e.g. *Emily Johnson*) to get an authentic Chinese name plus how your name is said around the world.
 Every card can be heard aloud, shuffled, and opened for a detailed story behind the name. The UI switches between
 Chinese and English automatically.
+
+## 效果预览 / Preview
+
+| 输入中文名 · Chinese name | 输入外文名 · Name in letters |
+|---|---|
+| <img src="docs/screenshots/result-zh.jpg" alt="王雪梅 的 12 国名字" /> | <img src="docs/screenshots/result-en.jpg" alt="Emily Johnson in 12 countries" /> |
 
 ## 结果怎么来的
 

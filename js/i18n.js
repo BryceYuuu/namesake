@@ -70,7 +70,8 @@
       payTitle: "免费次数用完啦",
       payGenerate: "每人可以免费生成 1 个名字，并换 3 次。付费版即将上线，到时可以给更多名字起名、无限换。",
       payShuffle: "免费的 3 次“换一个”已经用完。付费版即将上线，到时可以无限换、看完整详解。",
-      payRepo: "GitHub 免费自部署",
+      payRepo: "⭐ 点个 Star",
+      starAsk: "喜欢的话，去 GitHub 帮忙点个 Star 吧，这是对开源作者最大的鼓励 🙏",
       payOk: "知道了",
     },
     en: {
@@ -140,7 +141,8 @@
       payTitle: "You've used your free tries",
       payGenerate: "Everyone gets 1 free name and 3 shuffles. A paid version is coming soon with more names and unlimited shuffles.",
       payShuffle: "You've used your 3 free shuffles. A paid version is coming soon with unlimited shuffles and full details.",
-      payRepo: "Self-host on GitHub",
+      payRepo: "⭐ Star on GitHub",
+      starAsk: "Enjoying Namesake? A GitHub star means a lot to an indie open-source maker 🙏",
       payOk: "Got it",
     },
   };
