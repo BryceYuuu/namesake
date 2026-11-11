@@ -134,10 +134,23 @@ for ch in keys + extra:
     kana = KANA_PATCH.get(ch) or ja_kana(jf) or ja_kana(ch)
     out[ch] = [p, jf if jf != ch else "", kana, first_hangul(ch)]
 
+# 繁体 → 简体对照（只收录简体也在表里的），供引擎查复姓、性别、寓意时统一用简体
+t2s = {}
+for ch in out:
+    if ch in keys:
+        continue
+    for sc in cps(data.get(ch, {}).get("kSimplifiedVariant")):
+        if sc != ch and sc in out:
+            t2s[ch] = sc
+            break
+
 with open(out_path, "w", encoding="utf-8") as f:
     f.write("/* 由 tools/build_hanzi.py 从 Unicode Unihan 生成，勿手改。Unicode License v3，见 THIRD_PARTY_NOTICES.txt */\n")
     f.write("window.HANZI=")
     json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
+    f.write(";\nwindow.HANZI_T2S=")
+    json.dump(t2s, f, ensure_ascii=False, separators=(",", ":"))
     f.write(";\n")
 
+print(f"{len(t2s)} traditional->simplified pairs")
 print(f"{len(out)} chars -> {out_path} ({os.path.getsize(out_path)//1024} KB)")

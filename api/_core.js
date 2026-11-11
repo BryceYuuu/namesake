@@ -46,7 +46,7 @@ const LANGS = {
   },
 };
 
-const OUT_LANG = { zh: "中文", en: "English" };
+const OUT_LANG = { zh: "简体中文", zht: "繁體中文（台灣、香港用字）", en: "English" };
 
 const CN_RULES = `你是精通多国语言与命名文化的起名顾问，为中国用户起外文名。
 规则：
@@ -70,7 +70,7 @@ const FIELD_RULES = (ui) => `字段：
    read：${ui === "en" ? "英文发音提示，用大写标重音（如 eh-MEE-lee）；中文名留空" : "该名字常用的中文译名或近似读音（如 Wade→韦德）；中文名留空"}
    meaning：名字真实的含义，${ui === "en" ? "不超过 8 个英文单词" : "不超过 14 个字"}，不要编造
    why：为什么适合这个人，${ui === "en" ? "不超过 14 个英文单词" : "不超过 24 个字"}，具体到哪个音或哪层意思；没有关联就只说寓意，不要牵强附会
-所有说明文字（meaning、why、comment）用${OUT_LANG[ui]}写。只输出 JSON，不要任何其他文字。`;
+所有说明文字（meaning、why、comment，以及 read 里的中文译名）用${OUT_LANG[ui]}写。只输出 JSON，不要任何其他文字。`;
 
 const DETAIL_RULES = (ui) => `你是精通多国语言与命名文化的起名顾问。用户已选定一个名字，请做一份有趣、具体、可信的名字解析。
 要求：所有事实必须真实，不确定的内容宁可留空，不要编造；语气亲切，像朋友在介绍。所有说明文字用${OUT_LANG[ui]}写。
@@ -328,7 +328,7 @@ function listPrompt(base, { langs, exclude, withComment }) {
       ? `这次每种语言给 5 个全新的名字：必须和下面这些已经出现过的名字都不同，也不要只改一个字或只换同音字，要换思路（换寓意、换发音角度）：${exclude.join("、")}`
       : "",
     withComment
-      ? `另外 comment 用${OUT_LANG[base.ui]}写一句俏皮、正面的点评（${base.ui === "en" ? "不超过 16 个英文单词" : "不超过 24 个字"}），点评的是用户输入的原名“${base.name}”本身：必须原样写出“${base.name}”来称呼用户，不要用你起的任何名字（中文名或外文名）称呼用户，也不要罗列你起的名字或它们的寓意；不要拿名字常见或土开玩笑。`
+      ? `另外 comment 用${OUT_LANG[base.out]}写一句俏皮、正面的点评（${base.ui === "en" ? "不超过 16 个英文单词" : "不超过 24 个字"}），点评的是用户输入的原名“${base.name}”本身：必须原样写出“${base.name}”来称呼用户，不要用你起的任何名字（中文名或外文名）称呼用户，也不要罗列你起的名字或它们的寓意；不要拿名字常见或土开玩笑。`
       : "",
     `输出格式：${schema}`,
   ].filter(Boolean).join("\n");
@@ -342,19 +342,20 @@ function readInput(input) {
   if (mode === "foreign") {
     const name = String(input?.name || "").trim().replace(/\s+/g, " ");
     if (!FOREIGN_NAME_RE.test(name)) return null;
-    return { mode, ui, gender, name, pinyin: "" };
+    return { mode, ui, out: ui, gender, name, pinyin: "" };
   }
   const name = String(input?.name || "").replace(/\s/g, "");
   if (!/^[㐀-鿿]{2,5}$/.test(name)) return null;
-  return { mode, ui, gender, name, pinyin: str(input?.pinyin, 40) };
+  const hant = ui === "zh" && !!input?.hant;
+  return { mode, ui, out: hant ? "zht" : ui, gender, name, pinyin: str(input?.pinyin, 40) };
 }
 
 async function generate(input, ip = "unknown") {
   const base = readInput(input);
   if (!base) return { status: 400, body: { error: "bad name" } };
   const action = ["list", "more", "detail"].includes(input?.action) ? input.action : "list";
-  const rules = (base.mode === "foreign" ? FOREIGN_RULES : CN_RULES) + "\n" + FIELD_RULES(base.ui);
-  const ck = `${base.mode}|${base.ui}|${base.name.toLowerCase()}|${base.gender}`;
+  const rules = (base.mode === "foreign" ? FOREIGN_RULES : CN_RULES) + "\n" + FIELD_RULES(base.out);
+  const ck = `${base.mode}|${base.out}|${base.name.toLowerCase()}|${base.gender}`;
   const allowed = (k) => LANGS[k] && (k !== "zh" || base.mode === "foreign");
 
   let key, run;
@@ -387,7 +388,7 @@ async function generate(input, ip = "unknown") {
     if (!lang || !target) return { status: 400, body: { error: "no target" } };
     key = `detail|${ck}|${lang}|${target}`;
     const user = `${who(base)}\n要解析的名字：${target}${roman ? `（${roman}）` : ""}，语言：${LANGS[lang].label}`;
-    run = () => ask(DETAIL_RULES(base.ui), user, base.ui === "en" ? 1400 : 1100, (raw) => cleanDetail(raw, base.ui));
+    run = () => ask(DETAIL_RULES(base.out), user, base.ui === "en" ? 1400 : 1100, (raw) => cleanDetail(raw, base.ui));
   }
 
   if (key) {

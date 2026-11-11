@@ -6,6 +6,10 @@
 (function () {
   "use strict";
   const H = window.HANZI;
+  // 繁体字只在“查表”时映射到简体键（复姓、多音姓、性别、寓意表都按简体编写）；
+  // 页面上显示的永远是用户输入的原字，不做繁简转换。
+  const T2S = window.HANZI_T2S || {};
+  const key = (s) => [...s].map((c) => T2S[c] || c).join("");
 
   /* ---------------- 通用工具 ---------------- */
   const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
@@ -43,18 +47,19 @@
     if (unknown.length) return { error: `暂不支持这个字：${unknown.join("、")}` };
 
     const two = s.slice(0, 2);
-    const surLen = s.length >= 3 && window.COMPOUND_SURNAMES.includes(two) ? 2 : 1;
+    const surLen = s.length >= 3 && window.COMPOUND_SURNAMES.includes(key(two)) ? 2 : 1;
     const sur = s.slice(0, surLen);
     const given = s.slice(surLen);
     const SP = window.SURNAME_PINYIN;
 
     let surPy;
-    if (SP[sur] && surLen === 2) {
+    const spSur = SP[key(sur)];
+    if (spSur && surLen === 2) {
       // 复姓整体读音，如 万俟 mòqí → 拆成两个音节
-      const m = SP[sur].match(/[^aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]*[aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]+(?:ng|n|r)?(?![aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ])/g);
+      const m = spSur.match(/[^aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]*[aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]+(?:ng|n|r)?(?![aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ])/g);
       surPy = m && m.length === 2 ? m : [...sur].map((c) => H[c][0]);
     } else {
-      surPy = [...sur].map((c) => SP[c] || H[c][0]);
+      surPy = [...sur].map((c) => SP[key(c)] || H[c][0]);
     }
     const givenPy = [...given].map((c) => H[c][0]);
     return { full: s, sur, given, surPy, givenPy };
@@ -64,8 +69,8 @@
     const G = window.GENDER_HINT;
     let f = 0, m = 0;
     for (const c of given) {
-      if (G.f.includes(c)) f++;
-      if (G.m.includes(c)) m++;
+      if (G.f.includes(key(c))) f++;
+      if (G.m.includes(key(c))) m++;
     }
     return f > m ? "f" : m > f ? "m" : "";
   }
@@ -74,7 +79,8 @@
   for (const [tag, chars] of Object.entries(window.CHAR_TAGS)) {
     for (const c of chars) (TAG_OF[c] = TAG_OF[c] || []).push(tag);
   }
-  const charTags = (str) => [...new Set([...str].flatMap((c) => TAG_OF[c] || []))];
+  const tagsOf = (c) => TAG_OF[key(c)] || [];
+  const charTags = (str) => [...new Set([...str].flatMap(tagsOf))];
 
   /* ---------------- 日语 ---------------- */
   const KANA = {
@@ -303,7 +309,7 @@
 
   function reason(x, p) {
     const syl = cap(pyDisplay(p.givenPy[0]));
-    const chars = [...p.given].filter((c) => (TAG_OF[c] || []).some((t) => x.overlap.includes(t)));
+    const chars = [...p.given].filter((c) => tagsOf(c).some((t) => x.overlap.includes(t)));
     const parts = [];
     if (x.s >= 4) parts.push(`发音接近「${syl}」`);
     if (x.m > 0 && chars.length) parts.push(`呼应「${chars.join("")}」的寓意`);
@@ -354,5 +360,7 @@
     };
   }
 
-  window.WorldName = { analyze, guessGender, parseName, LANGS, kataToRomaji, korean };
+  // 输入里有繁体字（如 張、偉），AI 的说明文字就用繁体中文写
+  const isHant = (s) => [...(s || "")].some((c) => T2S[c]);
+  window.WorldName = { isHant, analyze, guessGender, parseName, LANGS, kataToRomaji, korean };
 })();

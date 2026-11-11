@@ -177,7 +177,8 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mode: state.mode, ui: state.ui, name: state.r.full, gender: state.gender, pinyin: state.r.pinyin, ...body,
+          mode: state.mode, ui: state.ui, name: state.r.full, gender: state.gender, pinyin: state.r.pinyin,
+          hant: state.mode === "cn" && WN.isHant(state.r.full), ...body,
         }),
         signal: ctrl.signal,
       });
